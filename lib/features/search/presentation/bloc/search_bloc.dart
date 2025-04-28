@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:interview_bank/features/search/data/dummies/clients_dummy.dart';
 import 'package:interview_bank/features/search/domain/entities/branch_entity.dart';
 import 'package:interview_bank/features/search/domain/entities/client_entity.dart';

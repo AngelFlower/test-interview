@@ -11,8 +11,25 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc() : super(SearchInitial()) {
     on<SearchEvent>((event, emit) {});
-    on<SearchPerCity>((event, emit) {
-      emit(SearchLoading());
+    on<SearchEventQuery>((event, emit) {
+      final String query = event.query;
+
+      if (query.isNotEmpty) {
+        emit(SearchLoading());
+        final List<ClientEntity> filteredClients = clientsDummy
+            .where((client) =>
+                client.name.toLowerCase().contains(query.toLowerCase()) ||
+                client.branch.city.toLowerCase() == query.toLowerCase())
+            .toList();
+
+        final List<GroupClients> clientsPerBranch =
+            groupClientsByBranch(filteredClients);
+        emit(SearchLoaded(initalClients: clientsPerBranch));
+      } else {
+        final List<GroupClients> clientsPerBranch =
+            groupClientsByBranch(clientsDummy);
+        emit(SearchLoaded(initalClients: clientsPerBranch));
+      }
     });
     on<SearchEventInitial>((event, emit) {
       emit(SearchLoading());

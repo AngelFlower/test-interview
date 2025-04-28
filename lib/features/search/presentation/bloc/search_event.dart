@@ -7,6 +7,8 @@ class SearchEventInitial extends SearchEvent {
   SearchEventInitial();
 }
 
-class SearchPerCity extends SearchEvent {
-  SearchPerCity();
+class SearchEventQuery extends SearchEvent {
+  final String query;
+
+  SearchEventQuery({required this.query});
 }

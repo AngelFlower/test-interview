@@ -11,15 +11,28 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SearchBloc()..add(SearchEventInitial()),
-      child: Scaffold(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
           appBar: AppBar(
             title: const Text('Gestor de clientes bancarios'),
           ),
-          body: _body()),
+          body: SearchList(),
+        ),
+      ),
     );
   }
+}
 
-  Column _body() {
+class SearchList extends StatelessWidget {
+  const SearchList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -30,7 +43,12 @@ class SearchScreen extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             onChanged: (value) {
-              // Handle search logic here
+              if (value.isNotEmpty) {
+                BlocProvider.of<SearchBloc>(context)
+                    .add(SearchEventQuery(query: value));
+              } else {
+                BlocProvider.of<SearchBloc>(context).add(SearchEventInitial());
+              }
             },
           ),
         ),
@@ -57,7 +75,8 @@ class SearchScreen extends StatelessWidget {
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold)),
-                        subtitle: Text('Total: \$ ${group.totalBalance}'),
+                        subtitle: Text(
+                            'Total: \$ ${group.totalBalance.toStringAsFixed(2)}'),
                         trailing: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
